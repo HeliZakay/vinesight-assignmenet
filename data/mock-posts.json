@@ -1,0 +1,162 @@
+[
+  {
+    "id": 1,
+    "platform": "twitter",
+    "text": "Breaking news: Major political event happening now!",
+    "status": "FLAGGED",
+    "tags": ["politics"],
+    "created_at": "2025-08-01T10:15:00Z"
+  },
+  {
+    "id": 2,
+    "platform": "tiktok",
+    "text": "Did you know this health fact? Turns out it's not true.",
+    "status": "FLAGGED",
+    "tags": ["health"],
+    "created_at": "2025-08-02T14:30:00Z"
+  },
+  {
+    "id": 3,
+    "platform": "facebook",
+    "text": "Local sports team wins championship!",
+    "status": "UNDER_REVIEW",
+    "tags": ["sports"],
+    "created_at": "2025-08-03T08:45:00Z"
+  },
+  {
+    "id": 4,
+    "platform": "twitter",
+    "text": "This investment trick will double your money overnight.",
+    "status": "FLAGGED",
+    "tags": ["finance"],
+    "created_at": "2025-08-03T16:20:00Z"
+  },
+  {
+    "id": 5,
+    "platform": "tiktok",
+    "text": "Celebrity spotted at local cafe – fans go wild!",
+    "status": "DISMISSED",
+    "tags": ["entertainment"],
+    "created_at": "2025-08-04T12:05:00Z"
+  },
+  {
+    "id": 6,
+    "platform": "instagram",
+    "text": "URGENT: New virus outbreak spreading fast! Governments are hiding the truth! Share before they delete this!",
+    "status": "FLAGGED",
+    "tags": ["health", "misinformation"],
+    "created_at": "2025-08-05T09:30:00Z"
+  },
+  {
+    "id": 7,
+    "platform": "reddit",
+    "text": "I think the election results might have some irregularities based on the data I've analyzed.",
+    "status": "UNDER_REVIEW",
+    "tags": ["politics", "election"],
+    "created_at": "2025-08-05T11:45:00Z"
+  },
+  {
+    "id": 8,
+    "platform": "telegram",
+    "text": "Check out my homemade pasta recipe! It's been in my family for generations.",
+    "status": "DISMISSED",
+    "tags": ["food", "lifestyle"],
+    "created_at": "2025-08-05T13:20:00Z"
+  },
+  {
+    "id": 9,
+    "platform": "twitter",
+    "text": "SCAM ALERT: Don't fall for the fake crypto giveaway posts! Always verify before sending any money.",
+    "status": "DISMISSED",
+    "tags": ["finance", "safety"],
+    "created_at": "2025-08-05T15:10:00Z"
+  },
+  {
+    "id": 10,
+    "platform": "facebook",
+    "text": "Doctors HATE this one simple trick to cure diabetes! Click here to learn more!",
+    "status": "FLAGGED",
+    "tags": ["health", "spam"],
+    "created_at": "2025-08-05T17:00:00Z"
+  },
+  {
+    "id": 11,
+    "platform": "tiktok",
+    "text": "Just finished my morning workout routine. Feeling great! Here's what I did: 30 min cardio, weights, stretching.",
+    "status": "DISMISSED",
+    "tags": ["fitness", "lifestyle"],
+    "created_at": "2025-08-06T07:15:00Z"
+  },
+  {
+    "id": 12,
+    "platform": "instagram",
+    "text": "The moon landing was definitely staged. Look at these 'inconsistencies' in the footage. Wake up people!",
+    "status": "FLAGGED",
+    "tags": ["conspiracy", "misinformation"],
+    "created_at": "2025-08-06T10:30:00Z"
+  },
+  {
+    "id": 13,
+    "platform": "twitter",
+    "text": "Climate change data seems concerning. Here's a peer-reviewed study from Nature journal showing recent trends.",
+    "status": "UNDER_REVIEW",
+    "tags": ["environment", "science"],
+    "created_at": "2025-08-06T12:45:00Z"
+  },
+  {
+    "id": 14,
+    "platform": "reddit",
+    "text": "Amazing sunset at the beach today! Nature never fails to inspire me.",
+    "status": "DISMISSED",
+    "tags": ["nature", "photography"],
+    "created_at": "2025-08-06T19:20:00Z"
+  },
+  {
+    "id": 15,
+    "platform": "telegram",
+    "text": "FREE iPhone 15! Just click this link and enter your credit card details for shipping! Limited time offer!!!",
+    "status": "FLAGGED",
+    "tags": ["scam", "spam"],
+    "created_at": "2025-08-07T08:00:00Z"
+  },
+  {
+    "id": 16,
+    "platform": "tiktok",
+    "text": "Some people are saying controversial things about recent events. I'm not sure what to believe anymore.",
+    "status": "UNDER_REVIEW",
+    "tags": ["politics", "opinion"],
+    "created_at": "2025-08-07T14:25:00Z"
+  },
+  {
+    "id": 17,
+    "platform": "facebook",
+    "text": "Happy birthday to my amazing daughter! Can't believe she's already 16. Time flies so fast!",
+    "status": "DISMISSED",
+    "tags": ["family", "personal"],
+    "created_at": "2025-08-07T16:30:00Z"
+  },
+  {
+    "id": 18,
+    "platform": "instagram",
+    "text": "Big Pharma doesn't want you to know about this natural remedy that cures EVERYTHING! DM me for details",
+    "status": "FLAGGED",
+    "tags": ["health", "scam", "misinformation"],
+    "created_at": "2025-08-07T20:15:00Z"
+  },
+  {
+    "id": 19,
+    "platform": "twitter",
+    "text": "New research suggests a potential link between social media usage and mental health. Interesting findings worth discussing.",
+    "status": "UNDER_REVIEW",
+    "tags": ["health", "research", "social-media"],
+    "created_at": "2025-08-08T09:40:00Z"
+  },
+  {
+    "id": 20,
+    "platform": "reddit",
+    "text": "Just learned how to make sourdough bread during lockdown. It's been a fun and therapeutic hobby!",
+    "status": "DISMISSED",
+    "tags": ["food", "hobby", "lifestyle"],
+    "created_at": "2025-08-08T11:55:00Z"
+  }
+]
