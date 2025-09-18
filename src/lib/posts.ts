@@ -10,7 +10,7 @@ type RawPost = {
   created_at: string;
 };
 
-export type PostStatus = "flagged" | "under_review" | "dismissed";
+export type PostStatus = string;
 export type Platform =
   | "twitter"
   | "facebook"
