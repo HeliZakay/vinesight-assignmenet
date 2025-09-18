@@ -2,24 +2,17 @@
 import { Box, HStack, NativeSelect, Text } from "@chakra-ui/react";
 import { Platform } from "@/lib/platforms";
 import { PostStatus } from "@/lib/statuses";
+import { useContext } from "react";
+import { FiltersContext } from "@/context/FiltersContext";
 
 // Static options from enum (keeps dropdown stable)
 const PLATFORM_OPTIONS = ["all", ...Object.values(Platform)];
 const STATUS_OPTIONS = ["all", ...Object.values(PostStatus)];
 
-type Props = {
-  status: string;
-  onStatusChange: (v: string) => void;
-  platform: string;
-  onPlatformChange: (v: string) => void;
-};
-
-export function FiltersBar({
-  status,
-  onStatusChange,
-  platform,
-  onPlatformChange,
-}: Props) {
+export function FiltersBar() {
+  const filters = useContext(FiltersContext);
+  if (!filters) return null;
+  const { status, setStatus, platform, setPlatform } = filters;
   return (
     <HStack gap={4} mb={4} alignItems="flex-end" justify="center">
       <Box>
@@ -31,7 +24,7 @@ export function FiltersBar({
             pl={3}
             style={{ textIndent: "4px", cursor: "pointer" }}
             value={status}
-            onChange={(e) => onStatusChange(e.currentTarget.value)}
+            onChange={(e) => setStatus(e.currentTarget.value)}
           >
             {STATUS_OPTIONS.map((s) => (
               <option key={s} value={s}>
@@ -52,7 +45,7 @@ export function FiltersBar({
             pl={3}
             style={{ textIndent: "4px", cursor: "pointer" }}
             value={platform}
-            onChange={(e) => onPlatformChange(e.currentTarget.value)}
+            onChange={(e) => setPlatform(e.currentTarget.value)}
           >
             {PLATFORM_OPTIONS.map((p) => (
               <option key={p} value={p}>

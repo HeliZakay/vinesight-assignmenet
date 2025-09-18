@@ -1,13 +1,13 @@
 import { useTags } from "@/hooks/useTags";
 import { Box, Button, Checkbox, HStack, Popover, Text } from "@chakra-ui/react";
+import { useContext } from "react";
+import { FiltersContext } from "@/context/FiltersContext";
 
-type Props = {
-  selectedTags: string[];
-  onChangeSelected: (tags: string[]) => void;
-};
-
-export function TagsFilterPopover({ selectedTags, onChangeSelected }: Props) {
+export function TagsFilterPopover() {
   const { tags: allTags } = useTags();
+  const filters = useContext(FiltersContext);
+  if (!filters) return null;
+  const { selectedTags, setSelectedTags } = filters;
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
@@ -36,7 +36,7 @@ export function TagsFilterPopover({ selectedTags, onChangeSelected }: Props) {
                       checked={checked}
                       onCheckedChange={(e) => {
                         const on = !!e.checked;
-                        onChangeSelected(
+                        setSelectedTags(
                           on
                             ? [...selectedTags, tag]
                             : selectedTags.filter((t) => t !== tag)
@@ -62,7 +62,7 @@ export function TagsFilterPopover({ selectedTags, onChangeSelected }: Props) {
                 size="sm"
                 variant="ghost"
                 px={3}
-                onClick={() => onChangeSelected([])}
+                onClick={() => setSelectedTags([])}
               >
                 Clear
               </Button>
