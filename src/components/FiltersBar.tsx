@@ -1,4 +1,3 @@
-// File: components/FiltersBar.tsx
 import { Box, HStack, NativeSelect, Text } from "@chakra-ui/react";
 import { Platform } from "@/lib/platforms";
 import { PostStatus } from "@/lib/statuses";

@@ -11,6 +11,8 @@ export function usePosts(
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    let active = true; // prevent setState after unmount
+
     const params = new URLSearchParams();
     if (platform !== "all") params.append("platform", platform);
     if (status !== "all") params.append("status", status);
@@ -28,9 +30,27 @@ export function usePosts(
     setLoading(true);
 
     fetch(`/api/posts${qs ? `?${qs}` : ""}`)
-      .then((res) => res.json())
-      .then((data) => setPosts(data))
-      .finally(() => setLoading(false));
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(
+            `Failed to fetch posts: ${res.status} ${res.statusText}`
+          );
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (active) setPosts(data);
+      })
+      .catch(() => {
+        if (active) setPosts([]);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, [platform, status, tags, search]);
 
   return { posts, loading } as const;
