@@ -3,13 +3,7 @@ import { Box, chakra } from "@chakra-ui/react";
 import type { Post } from "@/lib/posts";
 import { PostRow } from "@/components/PostRow";
 
-export function PostsTable({
-  posts,
-  statusOptions,
-}: {
-  posts: Post[];
-  statusOptions: string[];
-}) {
+export function PostsTable({ posts }: { posts: Post[] }) {
   return (
     <Box
       overflowX="auto"
@@ -44,7 +38,7 @@ export function PostsTable({
 
         <chakra.tbody>
           {posts.map((post) => (
-            <PostRow key={post.id} post={post} statusOptions={statusOptions} />
+            <PostRow key={post.id} post={post} />
           ))}
         </chakra.tbody>
       </chakra.table>

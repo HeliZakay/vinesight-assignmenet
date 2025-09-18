@@ -1,22 +1,24 @@
 // File: components/FiltersBar.tsx
 import { Box, HStack, NativeSelect, Text } from "@chakra-ui/react";
+import { Platform } from "@/lib/platforms";
+import { PostStatus } from "@/lib/statuses";
+
+// Static options from enum (keeps dropdown stable)
+const PLATFORM_OPTIONS = ["all", ...Object.values(Platform)];
+const STATUS_OPTIONS = ["all", ...Object.values(PostStatus)];
 
 type Props = {
   status: string;
   onStatusChange: (v: string) => void;
-  statusOptions: string[];
   platform: string;
   onPlatformChange: (v: string) => void;
-  platformOptions: string[];
 };
 
 export function FiltersBar({
   status,
   onStatusChange,
-  statusOptions,
   platform,
   onPlatformChange,
-  platformOptions,
 }: Props) {
   return (
     <HStack gap={4} mb={4} alignItems="flex-end" justify="center">
@@ -31,9 +33,9 @@ export function FiltersBar({
             value={status}
             onChange={(e) => onStatusChange(e.currentTarget.value)}
           >
-            {statusOptions.map((s) => (
+            {STATUS_OPTIONS.map((s) => (
               <option key={s} value={s}>
-                {s === "all" ? "All" : s.replace(/_/g, " ")}
+                {s.replace(/_/g, " ")}
               </option>
             ))}
           </NativeSelect.Field>
@@ -52,9 +54,9 @@ export function FiltersBar({
             value={platform}
             onChange={(e) => onPlatformChange(e.currentTarget.value)}
           >
-            {platformOptions.map((p) => (
+            {PLATFORM_OPTIONS.map((p) => (
               <option key={p} value={p}>
-                {p === "all" ? "All" : p}
+                {p}
               </option>
             ))}
           </NativeSelect.Field>

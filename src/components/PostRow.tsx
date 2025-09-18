@@ -9,14 +9,11 @@ import {
 } from "@chakra-ui/react";
 import type { Post } from "@/lib/posts";
 import { useState } from "react";
+import { PostStatus } from "@/lib/statuses";
 
-export function PostRow({
-  post,
-  statusOptions,
-}: {
-  post: Post;
-  statusOptions: string[];
-}) {
+const STATUS_OPTIONS = ["all", ...Object.values(PostStatus)];
+
+export function PostRow({ post }: { post: Post }) {
   const [row, setRow] = useState<Post>(post);
   const [draft, setDraft] = useState("");
 
@@ -66,13 +63,11 @@ export function PostRow({
             value={row.status}
             onChange={(e) => updateStatus(e.currentTarget.value)}
           >
-            {statusOptions
-              .filter((s) => s !== "all")
-              .map((s) => (
-                <option key={s} value={s}>
-                  {s.replace(/_/g, " ")}
-                </option>
-              ))}
+            {STATUS_OPTIONS.filter((s) => s !== "all").map((s) => (
+              <option key={s} value={s}>
+                {s.replace(/_/g, " ")}
+              </option>
+            ))}
           </NativeSelect.Field>
           <NativeSelect.Indicator />
         </NativeSelect.Root>

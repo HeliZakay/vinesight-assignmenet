@@ -1,16 +1,13 @@
+import { useTags } from "@/hooks/useTags";
 import { Box, Button, Checkbox, HStack, Popover, Text } from "@chakra-ui/react";
 
 type Props = {
-  tagOptions: string[];
   selectedTags: string[];
   onChangeSelected: (tags: string[]) => void;
 };
 
-export function TagsFilterPopover({
-  tagOptions,
-  selectedTags,
-  onChangeSelected,
-}: Props) {
+export function TagsFilterPopover({ selectedTags, onChangeSelected }: Props) {
+  const { tags: allTags } = useTags();
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
@@ -31,7 +28,7 @@ export function TagsFilterPopover({
 
             <Box maxH="180px" overflowY="auto" mb={3}>
               <Box display="flex" flexDirection="column" gap={2}>
-                {tagOptions.map((tag) => {
+                {allTags.map((tag) => {
                   const checked = selectedTags.includes(tag);
                   return (
                     <Checkbox.Root
