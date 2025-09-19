@@ -57,8 +57,12 @@ export async function GET(req: Request) {
     return okPlatform && okStatus && okTags && okSearch;
   });
 
-  // Ensure deterministic order for cursor-based pagination
-  filtered.sort((a, b) => a.id.localeCompare(b.id));
+  filtered.sort((a, b) => {
+    const bt = new Date(b.createdAt).getTime(); // or b.createdAt
+    const at = new Date(a.createdAt).getTime();
+    if (bt !== at) return bt - at; // newest → oldest
+    return String(a.id).localeCompare(String(b.id)); // deterministic tie-breaker
+  });
 
   // Determine starting index based on cursor
   let startIndex = 0;
