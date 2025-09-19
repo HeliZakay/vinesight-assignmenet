@@ -2,12 +2,22 @@
 "use client";
 
 import { useState } from "react";
-import { Box, Container, Flex, Heading, Text, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Flex,
+  Heading,
+  Text,
+  Input,
+  Button,
+} from "@chakra-ui/react";
 import { FiltersBar } from "@/components/FiltersBar";
 import { TagsFilterPopover } from "@/components/TagsFilterPopover";
 import { PostsTable } from "@/components/PostsTable";
 import { usePosts } from "@/hooks/usePosts";
 import { FiltersContext } from "@/context/FiltersContext";
+
+const POSTS_PER_PAGE = 10; // Number of posts to display per page
 
 export default function Home() {
   const [status, setStatus] = useState<string>("all");
@@ -15,7 +25,15 @@ export default function Home() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [search, setSearch] = useState("");
 
-  const { posts, loading } = usePosts(platform, status, selectedTags, search);
+  // Cursor-paginated data + controls
+  const {
+    posts,
+    loading, // initial page load
+    loadingMore, // subsequent pages
+    hasMore, // whether "Load more" should be enabled
+    error,
+    loadMore, // fetch next page
+  } = usePosts(platform, status, selectedTags, search, POSTS_PER_PAGE);
 
   return (
     <FiltersContext.Provider
@@ -45,6 +63,7 @@ export default function Home() {
           </Heading>
 
           <FiltersBar />
+
           <Box mt={4} mb={4} textAlign="center">
             <Input
               placeholder="Search posts…"
@@ -59,6 +78,24 @@ export default function Home() {
             <TagsFilterPopover />
           </Box>
 
+          {/* Error state */}
+          {error && (
+            <Box
+              textAlign="center"
+              p={4}
+              mb={4}
+              bg="red.50"
+              borderRadius="md"
+              border="1px solid"
+              borderColor="red.100"
+            >
+              <Text color="red.600" fontWeight="medium">
+                {error}
+              </Text>
+            </Box>
+          )}
+
+          {/* Loading / empty / table */}
           {loading ? (
             <Box textAlign="center" p={10}>
               <Text color="gray.600">Loading posts…</Text>
@@ -76,7 +113,23 @@ export default function Home() {
               </Text>
             </Box>
           ) : (
-            <PostsTable posts={posts} />
+            <>
+              <PostsTable posts={posts} />
+
+              {/* Load More control for cursor pagination */}
+              <Box textAlign="center" mt={6}>
+                <Button
+                  onClick={loadMore}
+                  loading={loadingMore}
+                  disabled={!hasMore || loadingMore}
+                  variant="outline"
+                  size="md"
+                  px={6}
+                >
+                  {hasMore ? "Load more" : "No more posts"}
+                </Button>
+              </Box>
+            </>
           )}
         </Container>
       </Flex>
