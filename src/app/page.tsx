@@ -14,8 +14,10 @@ import {
 import { FiltersBar } from "@/components/FiltersBar";
 import { TagsFilterPopover } from "@/components/TagsFilterPopover";
 import { PostsTable } from "@/components/PostsTable";
+import { LoadMoreButton } from "@/components/LoadMoreButton";
 import { usePosts } from "@/hooks/usePosts";
 import { FiltersContext } from "@/context/FiltersContext";
+import { PortalToast } from "@/components/PortalToast";
 
 const POSTS_PER_PAGE = 10; // Number of posts to display per page
 
@@ -78,21 +80,14 @@ export default function Home() {
             <TagsFilterPopover />
           </Box>
 
-          {/* Error state */}
+          {/* Error state via toast */}
           {error && (
-            <Box
-              textAlign="center"
-              p={4}
-              mb={4}
-              bg="red.50"
-              borderRadius="md"
-              border="1px solid"
-              borderColor="red.100"
-            >
-              <Text color="red.600" fontWeight="medium">
-                {error}
-              </Text>
-            </Box>
+            <PortalToast
+              title="Error loading posts"
+              description={error}
+              status="error"
+              duration={2000}
+            />
           )}
 
           {/* Loading / empty / table */}
@@ -117,18 +112,11 @@ export default function Home() {
               <PostsTable posts={posts} />
 
               {/* Load More control for cursor pagination */}
-              <Box textAlign="center" mt={6}>
-                <Button
-                  onClick={loadMore}
-                  loading={loadingMore}
-                  disabled={!hasMore || loadingMore}
-                  variant="outline"
-                  size="md"
-                  px={6}
-                >
-                  {hasMore ? "Load more" : "No more posts"}
-                </Button>
-              </Box>
+              <LoadMoreButton
+                hasMore={hasMore}
+                loadingMore={loadingMore}
+                onClick={loadMore}
+              />
             </>
           )}
         </Container>
