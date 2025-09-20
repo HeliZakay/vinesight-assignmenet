@@ -6,33 +6,15 @@ Implements the assignment requirements: list flagged posts, filter (status / pla
 
 ---
 
-## Highlights & Key Details (TL;DR)
+## Highlights
 
-Filtering & Pagination:
-
-- Server-side filtering applied before pagination with deterministic ordering (createdAt desc, id asc)
-- Cursor pagination via `useCursorPager` (race-safe request sequencing + stale response discard)
-- Flicker guard: `hasLoaded` prevents premature empty state
-- Chose cursor (not offset) for stable page boundaries and easy future opaque upgrade
-
-Mutations & Validation:
-
-- Defensive API validation (content-type, JSON shape, allowed status/tag rules, tag length)
-- Optimistic inline status & tag updates with accessible toasts (aria-live)
-
-Tags & Search UX:
-
-- Multi-select OR tag filtering (can extend to AND) + case-insensitive text search
-
-Data Handling & Trade-offs:
-
-- Static JSON dataset normalized once on startup (in-memory only; changes ephemeral)
-- Simple last-id cursor chosen (opaque form documented for future mutation safety)
-
-Tooling & Quality:
-
-- Smoke script (`npm run smoke`) covering filters, pagination, status & tag mutations
-- Explicit trade-offs documented to aid reviewer time efficiency
+- Full assignment coverage: list + filter (status / platform / tags / search) + status updates + tag add/remove
+- Deterministic server filtering + cursor pagination (createdAt desc, id asc) with race-safe hook & flicker-free first load
+- Optimistic in-row status/tag mutations with accessible toasts (aria-live) and duplicate-tag guard
+- Defensive API validation (content-type, schema shape, allowed status values, tag length & casing)
+- Pragmatic trade-offs: in-memory dataset, simple last-id cursor, focused smoke tests over exhaustive suite (all documented)
+- Automated smoke script (`npm run smoke`) exercises filters, pagination, status update, tag add/remove for fast reviewer confidence
+- Clear extensibility path: opaque cursor, persistence layer, AND tag logic option, abortable fetches
 
 ---
 
@@ -124,8 +106,6 @@ Returns sorted unique list of all tags (lowercase).
 - Inline status select & tag add/remove with toast feedback (success & error). Duplicate tag adds prevented client-side.
 
 ---
-
-## (Removed sections: previous "Key Implementation Details" and "Architecture Overview" were merged into the unified highlights above.)
 
 ## Assumptions & Trade‑offs
 
