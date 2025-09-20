@@ -6,13 +6,13 @@ Simple full‑stack tool for analysts to review, filter, and annotate flagged so
 
 ## Highlights
 
-- End‑to‑end coverage: list, multi‑criteria filter (status / platform / tags / text), status change, tag add/remove.
-- Fast, stable data access: deterministic server filtering + cursor pagination (createdAt desc, id asc) with race‑safe hook and zero initial flicker.
-- Efficient UX: optimistic row updates + accessible toasts (aria‑live) + duplicate‑tag prevention.
-- Defensive backend: strict content‑type & payload validation; constraints on status + tag length/casing.
-- Pragmatic scope: static in‑memory dataset + simple last‑id cursor documented with upgrade path.
-- Quick reviewer confidence: smoke script (`npm run smoke`) exercises filters, pagination, mutations.
-- Clear extension runway: persistence layer, opaque cursor, AND tag logic toggle, abortable fetches.
+- Full assignment coverage: list + filter (status / platform / tags / search) + status updates + tag add/remove
+- Deterministic server filtering + cursor pagination (createdAt desc, id asc) with race-safe hook & flicker-free first load
+- Optimistic in-row status/tag mutations with accessible toasts (aria-live) and duplicate-tag guard
+- Defensive API validation (content-type, schema shape, allowed status values, tag length & casing)
+- Pragmatic trade-offs: in-memory dataset, simple last-id cursor, focused smoke tests over exhaustive suite (all documented)
+- Automated smoke script (`npm run smoke`) exercises filters, pagination, status update, tag add/remove for fast reviewer confidence
+- Clear extensibility path: opaque cursor, persistence layer, AND tag logic option, abortable fetches
 
 ---
 
