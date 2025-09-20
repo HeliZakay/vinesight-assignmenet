@@ -6,13 +6,13 @@ Simple full‑stack tool for analysts to review, filter, and annotate flagged so
 
 ## Highlights
 
-- Full assignment coverage: list + filter (status / platform / tags / search) + status updates + tag add/remove
-- Deterministic server filtering + cursor pagination (createdAt desc, id asc) with race-safe hook & flicker-free first load
-- Optimistic in-row status/tag mutations with accessible toasts (aria-live) and duplicate-tag guard
-- Defensive API validation (content-type, schema shape, allowed status values, tag length & casing)
-- Pragmatic trade-offs: in-memory dataset, simple last-id cursor, focused smoke tests over exhaustive suite (all documented)
-- Automated smoke script (`npm run smoke`) exercises filters, pagination, status update, tag add/remove for fast reviewer confidence
-- Clear extensibility path: opaque cursor, persistence layer, AND tag logic option, abortable fetches
+- End‑to‑end coverage: list, multi‑criteria filter (status / platform / tags / text), status change, tag add/remove.
+- Fast, stable data access: deterministic server filtering + cursor pagination (createdAt desc, id asc) with race‑safe hook and zero initial flicker.
+- Efficient UX: optimistic row updates + accessible toasts (aria‑live) + duplicate‑tag prevention.
+- Defensive backend: strict content‑type & payload validation; constraints on status + tag length/casing.
+- Pragmatic scope: static in‑memory dataset + simple last‑id cursor documented with upgrade path.
+- Quick reviewer confidence: smoke script (`npm run smoke`) exercises filters, pagination, mutations.
+- Clear extension runway: persistence layer, opaque cursor, AND tag logic toggle, abortable fetches.
 
 ---
 
@@ -38,16 +38,6 @@ npm run dev
 Then open http://localhost:3000
 
 No environment variables are required.
-
----
-
-## Data Model
-
-Post: { id: string, platform, text, status, tags: string[], createdAt: ISO string }
-Platforms normalized to: twitter | facebook | instagram | tiktok | reddit | other
-Statuses normalized to: flagged | under_review | dismissed
-
-All mutation changes are ephemeral (lost on restart).
 
 ---
 
@@ -99,9 +89,21 @@ Returns sorted unique list of all tags (lowercase).
 
 ## Frontend Behavior
 
-- Filters (status / platform / tags / search) wired through a context provider.
-- Posts fetched with cursor pagination; UI exposes a Load More control (internally just keeps next page state). After the first page, previously loaded posts remain visible while additional pages load (partial data strategy). Empty state suppressed until first load completes to prevent flicker.
-- Inline status select & tag add/remove with toast feedback (success & error). Duplicate tag adds prevented client-side.
+State & Filters:
+
+- Central `FiltersContext` holds status, platform, search text, and selected tags (OR logic). Any change triggers a fresh first-page fetch.
+
+Pagination UX:
+
+- Cursor-based incremental loading via a single Load More button. Previously loaded pages persist while the next page loads (no jarring resets). A `hasLoaded` flag suppresses premature empty UI.
+
+Mutations:
+
+- Row-level status dropdown and tag add/remove actions update optimistically on success; accessible toasts surface success/errors; duplicate tag submissions short‑circuit locally.
+
+Resilience & A11y:
+
+- Race-safe pagination prevents stale overwrites. Toasts use `aria-live` for assistive tech. Error states shown for tag loading.
 
 ---
 
@@ -134,17 +136,6 @@ Returns sorted unique list of all tags (lowercase).
 - Tag caching & incremental invalidation on mutations.
 
 Deferred intentionally due to 3–4 hour timebox: persistence layer, full test suite, opaque cursor encoding, advanced accessibility refinements.
-
----
-
-<!-- Manual verification checklist removed per request; smoke script now serves as automated shorthand. -->
-
-## Running a Production Build (Optional)
-
-```bash
-npm run build
-npm start
-```
 
 ---
 
