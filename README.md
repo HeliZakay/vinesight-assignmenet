@@ -2,8 +2,6 @@
 
 Simple full‑stack tool for analysts to review, filter, and annotate flagged social posts.
 
-Implements the assignment requirements: list flagged posts, filter (status / platform / tag / search), update status, add/remove tags, with a TypeScript Next.js backend loading from a static JSON dataset (no persistence).
-
 ---
 
 ## Highlights
