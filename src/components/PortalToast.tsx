@@ -1,3 +1,5 @@
+// Lightweight portal-based toast component.
+// Auto-dismisses after a duration and uses aria-live regions for a11y.
 import { Box, chakra } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
@@ -27,6 +29,7 @@ export function PortalToast({
   onClose,
 }: PortalToastProps) {
   useEffect(() => {
+    // Schedule auto-dismiss only if a close handler is provided.
     if (!onClose) return;
     const id = window.setTimeout(() => onClose(), duration);
     return () => window.clearTimeout(id);
@@ -44,6 +47,7 @@ export function PortalToast({
       borderRadius="md"
       boxShadow="lg"
       zIndex={1000}
+      // Errors & warnings should interrupt (assertive); successes & info are polite
       role={status === "error" || status === "warning" ? "alert" : "status"}
       aria-live={status === "error" || status === "warning" ? "assertive" : "polite"}
     >

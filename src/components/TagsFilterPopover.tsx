@@ -1,10 +1,12 @@
+// Tag filter popover: fetches all distinct tags and allows multi-select (OR logic)
+// with clear + done affordances. Shows loading / error / empty states.
 import { useTags } from "@/hooks/useTags";
 import { Box, Button, Checkbox, HStack, Popover, Text } from "@chakra-ui/react";
 import { useContext } from "react";
 import { FiltersContext } from "@/context/FiltersContext";
 
 export function TagsFilterPopover() {
-  const { tags: allTags, loading, error } = useTags();
+  const { tags: allTags, loading, error } = useTags(); // separate hook (could cache)
   const filters = useContext(FiltersContext);
   if (!filters) return null;
   const { selectedTags, setSelectedTags } = filters;
@@ -51,7 +53,7 @@ export function TagsFilterPopover() {
                         key={tag}
                         checked={checked}
                         onCheckedChange={(e) => {
-                          const on = !!e.checked;
+                          const on = !!e.checked; // convert tri-state to boolean
                           setSelectedTags(
                             on
                               ? [...selectedTags, tag]

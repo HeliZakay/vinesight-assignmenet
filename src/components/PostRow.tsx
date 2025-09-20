@@ -1,3 +1,5 @@
+// Displays a single post row with inline editing for status and tags.
+// Handles optimistic UI updates after server success and shows toast feedback.
 import {
   HStack,
   Input,
@@ -14,8 +16,11 @@ import { PortalToast } from "./PortalToast";
 const STATUS_OPTIONS = ["all", ...Object.values(PostStatus)];
 
 export function PostRow({ post }: { post: Post }) {
+  // Local copy of the post enabling optimistic updates without refetching list
   const [row, setRow] = useState<Post>(post);
+  // Draft tag input value
   const [draft, setDraft] = useState("");
+  // Transient toast message state (portal renders when non-null)
   const [toastMsg, setToastMsg] = useState<{
     title: string;
     description?: string;
@@ -30,12 +35,14 @@ export function PostRow({ post }: { post: Post }) {
     setToastMsg({ title, description, status: "success" });
   };
 
+  // Pre-compute validation for enabling the Add button (purely derived)
   const normalizedDraft = draft.trim().toLowerCase();
   const canAdd =
     normalizedDraft.length > 0 &&
     normalizedDraft.length <= 30 &&
     !row.tags.some((t) => t.toLowerCase() === normalizedDraft);
 
+  // Update status via PATCH then optimistically update local state on success
   const updateStatus = async (newStatus: string) => {
     try {
       const res = await fetch(`/api/posts/${row.id}/status`, {
@@ -54,6 +61,7 @@ export function PostRow({ post }: { post: Post }) {
     }
   };
 
+  // Remove a tag (spec-compliant DELETE path with tag in URL)
   const removeTag = async (tag: string) => {
     try {
       const res = await fetch(
@@ -73,6 +81,7 @@ export function PostRow({ post }: { post: Post }) {
     }
   };
 
+  // Add new tag after client-side validation, then clear draft on success
   const addTag = async () => {
     const raw = draft.trim();
     const tag = raw.toLowerCase();

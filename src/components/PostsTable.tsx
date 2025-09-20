@@ -1,4 +1,5 @@
-// File: components/PostsTable.tsx
+// Renders the posts collection as a simple accessible table.
+// Delegates row-level editing & mutation logic to PostRow.
 import { Box, chakra } from "@chakra-ui/react";
 import type { Post } from "@/lib/posts";
 import { PostRow } from "@/components/PostRow";

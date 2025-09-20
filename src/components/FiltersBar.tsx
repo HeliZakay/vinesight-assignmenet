@@ -1,3 +1,5 @@
+// Renders platform & status dropdown filters backed by FiltersContext.
+// Keeps filter UI logic isolated from the page and memo-friendly.
 import { Box, HStack, NativeSelect, Text } from "@chakra-ui/react";
 import { Platform } from "@/lib/platforms";
 import { PostStatus } from "@/lib/statuses";

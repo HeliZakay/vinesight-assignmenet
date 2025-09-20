@@ -1,3 +1,5 @@
+// Generic "Load more" control used with cursor pagination.
+// Disabled when there's no additional page or a fetch is in flight.
 import { Box, Button } from "@chakra-ui/react";
 
 type Props = {
