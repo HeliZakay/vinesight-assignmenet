@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { FiltersContext } from "@/context/FiltersContext";
 
 export function TagsFilterPopover() {
-  const { tags: allTags } = useTags();
+  const { tags: allTags, loading, error } = useTags();
   const filters = useContext(FiltersContext);
   if (!filters) return null;
   const { selectedTags, setSelectedTags } = filters;
@@ -27,34 +27,51 @@ export function TagsFilterPopover() {
             </Text>
 
             <Box maxH="180px" overflowY="auto" mb={3}>
-              <Box display="flex" flexDirection="column" gap={2}>
-                {allTags.map((tag) => {
-                  const checked = selectedTags.includes(tag);
-                  return (
-                    <Checkbox.Root
-                      key={tag}
-                      checked={checked}
-                      onCheckedChange={(e) => {
-                        const on = !!e.checked;
-                        setSelectedTags(
-                          on
-                            ? [...selectedTags, tag]
-                            : selectedTags.filter((t) => t !== tag)
-                        );
-                      }}
-                      p={1}
-                      borderRadius="md"
-                      _hover={{ bg: "purple.50" }}
-                    >
-                      <Checkbox.HiddenInput />
-                      <Checkbox.Control />
-                      <Checkbox.Label px={2} py={1}>
-                        {tag}
-                      </Checkbox.Label>
-                    </Checkbox.Root>
-                  );
-                })}
-              </Box>
+              {loading && (
+                <Text fontSize="sm" color="gray.500">
+                  Loading tags…
+                </Text>
+              )}
+              {!loading && error && (
+                <Text fontSize="sm" color="red.600">
+                  Failed to load tags
+                </Text>
+              )}
+              {!loading && !error && allTags.length === 0 && (
+                <Text fontSize="sm" color="gray.500">
+                  No tags available
+                </Text>
+              )}
+              {!loading && !error && allTags.length > 0 && (
+                <Box display="flex" flexDirection="column" gap={2}>
+                  {allTags.map((tag) => {
+                    const checked = selectedTags.includes(tag);
+                    return (
+                      <Checkbox.Root
+                        key={tag}
+                        checked={checked}
+                        onCheckedChange={(e) => {
+                          const on = !!e.checked;
+                          setSelectedTags(
+                            on
+                              ? [...selectedTags, tag]
+                              : selectedTags.filter((t) => t !== tag)
+                          );
+                        }}
+                        p={1}
+                        borderRadius="md"
+                        _hover={{ bg: "purple.50" }}
+                      >
+                        <Checkbox.HiddenInput />
+                        <Checkbox.Control />
+                        <Checkbox.Label px={2} py={1}>
+                          {tag}
+                        </Checkbox.Label>
+                      </Checkbox.Root>
+                    );
+                  })}
+                </Box>
+              )}
             </Box>
 
             <HStack gap={2} justifyContent="space-between">

@@ -71,6 +71,10 @@ export async function GET(req: Request) {
     if (idx >= 0) startIndex = idx + 1; // start after the cursor
   }
 
+  // Cursor strategy: we expose the id of the last item of the current page.
+  // On the next request the server finds that id and starts from the next index.
+  // This remains stable because ordering is deterministic (createdAt desc, id asc).
+
   // Take only the requested number of items
   const page = filtered.slice(startIndex, startIndex + limit);
 

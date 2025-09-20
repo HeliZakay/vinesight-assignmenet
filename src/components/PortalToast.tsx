@@ -44,6 +44,8 @@ export function PortalToast({
       borderRadius="md"
       boxShadow="lg"
       zIndex={1000}
+      role={status === "error" || status === "warning" ? "alert" : "status"}
+      aria-live={status === "error" || status === "warning" ? "assertive" : "polite"}
     >
       <chakra.div fontWeight="bold">{title}</chakra.div>
       {description && <chakra.div fontSize="sm">{description}</chakra.div>}

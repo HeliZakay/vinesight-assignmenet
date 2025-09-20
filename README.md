@@ -88,7 +88,7 @@ Returns sorted unique list of all tags (lowercase).
 ## Frontend Behavior
 
 - Filters (status / platform / tags / search) wired through a context provider.
-- Posts fetched with cursor pagination; UI exposes a Load More control (internally just keeps next page state). Empty state suppressed until first load completes to prevent flicker.
+- Posts fetched with cursor pagination; UI exposes a Load More control (internally just keeps next page state). After the first page, previously loaded posts remain visible while additional pages load (partial data strategy). Empty state suppressed until first load completes to prevent flicker.
 - Inline status select & tag add/remove with toast feedback (success & error). Duplicate tag adds prevented client-side.
 
 ---
@@ -116,7 +116,7 @@ Normalization: Data normalized once on startup (`lib/posts.ts`).
 
 - Fetch posts: fails with toast (generic user-friendly message; technical reason kept internal).
 - Mutations: toast on failure; network errors caught.
-- Tag fetching currently ignores errors (future improvement: surface error state in UI).
+- Tag fetching: loading / error / empty states surfaced in tag popover.
 
 ---
 
