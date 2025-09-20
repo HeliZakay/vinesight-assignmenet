@@ -155,6 +155,24 @@ npm start
 
 ---
 
+## Optional Smoke Tests
+
+A lightweight script validates core API flows (listing, filtering, pagination, status + tag mutations).
+
+Run while dev server is active:
+
+```bash
+# Terminal 1
+npm run dev
+
+# Terminal 2 (after server starts)
+npm run smoke
+```
+
+Expected output: PASS lines for each check and "All smoke tests passed." on success. Non‑zero exit code indicates a failure.
+
+---
+
 ## Author
 
 Assignment implementation by Heli Zakay.
