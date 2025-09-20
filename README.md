@@ -10,9 +10,8 @@ Simple full‑stack tool for analysts to review, filter, and annotate flagged so
 - Deterministic server filtering + cursor pagination (createdAt desc, id asc) with race-safe hook & flicker-free first load
 - Optimistic in-row status/tag mutations with accessible toasts (aria-live) and duplicate-tag guard
 - Defensive API validation (content-type, schema shape, allowed status values, tag length & casing)
-- Pragmatic trade-offs: in-memory dataset, simple last-id cursor, focused smoke tests over exhaustive suite (all documented)
-- Automated smoke script (`npm run smoke`) exercises filters, pagination, status update, tag add/remove for fast reviewer confidence
-- Clear extensibility path: opaque cursor, persistence layer, AND tag logic option, abortable fetches
+- Robust error handling surfaced to users: server-level validation (content-type, JSON parse, status + tag constraints), guarded fetches (`res.ok` checks), toast feedback for mutation failures, tag loading error state, race-safe pagination discarding stale responses.
+- Documented pragmatic trade-offs (in-memory dataset, simple cursor, smoke-tests focus) with clear extension path: persistence layer, opaque cursor, AND tag logic toggle, abortable fetches.
 
 ---
 
