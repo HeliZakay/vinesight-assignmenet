@@ -135,8 +135,6 @@ Resilience & A11y:
 - Accessibility enhancements (aria-live for toasts, focus management in popover).
 - Tag caching & incremental invalidation on mutations.
 
-Deferred intentionally due to 3–4 hour timebox: persistence layer, full test suite, opaque cursor encoding, advanced accessibility refinements.
-
 ---
 
 ## Optional Smoke Tests
