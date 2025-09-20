@@ -6,15 +6,33 @@ Implements the assignment requirements: list flagged posts, filter (status / pla
 
 ---
 
-## Highlights (TL;DR)
+## Highlights & Key Details (TL;DR)
 
-- Server-side filtering + cursor pagination (stable ordering: createdAt desc, id asc)
-- Defensive API validation (content-type, JSON shape, allowed status/tag rules)
-- Optimistic inline status & tag edits with accessible toasts (aria-live)
-- Race-safe pagination hook prevents stale response overwrites
-- Tag OR multi-select + text search
-- Smoke script (`npm run smoke`) covering filters, pagination, mutations
-- Clear trade-offs documented (in-memory dataset, simple cursor)
+Filtering & Pagination:
+
+- Server-side filtering applied before pagination with deterministic ordering (createdAt desc, id asc)
+- Cursor pagination via `useCursorPager` (race-safe request sequencing + stale response discard)
+- Flicker guard: `hasLoaded` prevents premature empty state
+- Chose cursor (not offset) for stable page boundaries and easy future opaque upgrade
+
+Mutations & Validation:
+
+- Defensive API validation (content-type, JSON shape, allowed status/tag rules, tag length)
+- Optimistic inline status & tag updates with accessible toasts (aria-live)
+
+Tags & Search UX:
+
+- Multi-select OR tag filtering (can extend to AND) + case-insensitive text search
+
+Data Handling & Trade-offs:
+
+- Static JSON dataset normalized once on startup (in-memory only; changes ephemeral)
+- Simple last-id cursor chosen (opaque form documented for future mutation safety)
+
+Tooling & Quality:
+
+- Smoke script (`npm run smoke`) covering filters, pagination, status & tag mutations
+- Explicit trade-offs documented to aid reviewer time efficiency
 
 ---
 
@@ -107,45 +125,7 @@ Returns sorted unique list of all tags (lowercase).
 
 ---
 
-## Key Implementation Details
-
-Pagination Hook: `useCursorPager` handles first-page vs additional-page loading, stale request protection, and exposes `hasLoaded` to avoid early empty state rendering.
-Filtering & Ordering: All filters applied before pagination; stable deterministic ordering ensures paginated consistency.
-Validation: Mutation routes validate content type, JSON body shape, allowed status values, tag length.
-Normalization: Data normalized once on startup (`lib/posts.ts`).
-Race Safety: Pagination uses a request sequence ref to discard stale responses.
-
----
-
-## Architecture Overview
-
-```
-src/
-	app/api/posts                # GET list (filters + pagination)
-	app/api/posts/[id]/status    # PATCH status
-	app/api/posts/[id]/tags      # POST add tag
-	app/api/posts/[id]/tags/[tag]# DELETE tag
-	app/api/tags                 # Tag aggregation
-	components/                  # UI components (table, row, filters, toasts)
-	hooks/                       # Data hooks (pagination, tags, posts)
-	context/FiltersContext.tsx   # Centralized filter state
-	lib/                         # Normalization & enums
-	scripts/smoke.mjs            # API smoke tests
-```
-
-Design layering keeps mutation logic at row level, filtering in context + hook.
-
----
-
-## Design Decisions
-
-- Cursor over offset: stable deterministic ordering; easier to extend to opaque form later.
-- Simple last-id cursor: sufficient for static file dataset; trade-off documented.
-- Optimistic row updates: faster UX; refetch avoided to respect timebox.
-- In-memory only: assignment specifies no persistence, avoids over-engineering.
-- Smoke tests instead of full suite: high ROI within remaining time.
-
----
+## (Removed sections: previous "Key Implementation Details" and "Architecture Overview" were merged into the unified highlights above.)
 
 ## Assumptions & Trade‑offs
 
@@ -179,19 +159,7 @@ Deferred intentionally due to 3–4 hour timebox: persistence layer, full test s
 
 ---
 
-## Manual Verification Checklist
-
-1. Load page: initial spinner, then posts render.
-2. Change status filter (e.g., under_review): list updates.
-3. Add tag filter: only posts containing tag appear.
-4. Search substring: narrows results (case-insensitive).
-5. Update a post status: toast success; row reflects new status.
-6. Add a tag: tag appears; adding again shows error toast.
-7. Remove tag via close icon: tag disappears; toast success.
-8. Use Load More until hasMore false (button disabled).
-9. DELETE endpoint test: curl -I returns 204 when removing existing tag.
-
----
+<!-- Manual verification checklist removed per request; smoke script now serves as automated shorthand. -->
 
 ## Running a Production Build (Optional)
 
