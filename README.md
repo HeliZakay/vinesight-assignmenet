@@ -8,10 +8,9 @@ Simple full‑stack tool for analysts to review, filter, and annotate flagged so
 
 - Full assignment coverage: list + filter (status / platform / tags / search) + status updates + tag add/remove
 - Deterministic server filtering + cursor pagination (createdAt desc, id asc) with race-safe hook & flicker-free first load
-- Optimistic in-row status/tag mutations with accessible toasts (aria-live) and duplicate-tag guard
-- Defensive API validation (content-type, schema shape, allowed status values, tag length & casing)
-- Robust error handling surfaced to users: server-level validation (content-type, JSON parse, status + tag constraints), guarded fetches (`res.ok` checks), toast feedback for mutation failures, tag loading error state, race-safe pagination discarding stale responses.
-- Documented pragmatic trade-offs (in-memory dataset, simple cursor, smoke-tests focus) with clear extension path: persistence layer, opaque cursor, AND tag logic toggle, abortable fetches.
+- Fast, optimistic in-row status & tag edits with immediate toast feedback (success & error), accessible aria-live announcements, and a duplicate-tag guard.
+- Defensive server-side validation (content-type, body shape, allowed statuses, tag length/casing) with clear user toasts instead of silent failures.
+- Comprehensive error handling: guarded fetches (res.ok checks), clear toast feedback for failures, explicit tag-loading error state, and validation errors surfaced instead of failing silently.
 
 ---
 
