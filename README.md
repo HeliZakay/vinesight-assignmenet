@@ -6,6 +6,18 @@ Implements the assignment requirements: list flagged posts, filter (status / pla
 
 ---
 
+## Highlights (TL;DR)
+
+- Server-side filtering + cursor pagination (stable ordering: createdAt desc, id asc)
+- Defensive API validation (content-type, JSON shape, allowed status/tag rules)
+- Optimistic inline status & tag edits with accessible toasts (aria-live)
+- Race-safe pagination hook prevents stale response overwrites
+- Tag OR multi-select + text search
+- Smoke script (`npm run smoke`) covering filters, pagination, mutations
+- Clear trade-offs documented (in-memory dataset, simple cursor)
+
+---
+
 ## Tech Stack
 
 Frontend: React (Next.js App Router), TypeScript, Chakra UI (component primitives)
@@ -15,6 +27,8 @@ Data Source: `data/mock-posts.json` (in‑memory only)
 ---
 
 ## Getting Started
+
+Requires Node 18+ (tested on Node 20.x).
 
 Install dependencies and start the dev server:
 
@@ -99,6 +113,37 @@ Pagination Hook: `useCursorPager` handles first-page vs additional-page loading,
 Filtering & Ordering: All filters applied before pagination; stable deterministic ordering ensures paginated consistency.
 Validation: Mutation routes validate content type, JSON body shape, allowed status values, tag length.
 Normalization: Data normalized once on startup (`lib/posts.ts`).
+Race Safety: Pagination uses a request sequence ref to discard stale responses.
+
+---
+
+## Architecture Overview
+
+```
+src/
+	app/api/posts                # GET list (filters + pagination)
+	app/api/posts/[id]/status    # PATCH status
+	app/api/posts/[id]/tags      # POST add tag
+	app/api/posts/[id]/tags/[tag]# DELETE tag
+	app/api/tags                 # Tag aggregation
+	components/                  # UI components (table, row, filters, toasts)
+	hooks/                       # Data hooks (pagination, tags, posts)
+	context/FiltersContext.tsx   # Centralized filter state
+	lib/                         # Normalization & enums
+	scripts/smoke.mjs            # API smoke tests
+```
+
+Design layering keeps mutation logic at row level, filtering in context + hook.
+
+---
+
+## Design Decisions
+
+- Cursor over offset: stable deterministic ordering; easier to extend to opaque form later.
+- Simple last-id cursor: sufficient for static file dataset; trade-off documented.
+- Optimistic row updates: faster UX; refetch avoided to respect timebox.
+- In-memory only: assignment specifies no persistence, avoids over-engineering.
+- Smoke tests instead of full suite: high ROI within remaining time.
 
 ---
 
@@ -129,6 +174,8 @@ Normalization: Data normalized once on startup (`lib/posts.ts`).
 - Input sanitation / stricter schema validation (zod or valibot).
 - Accessibility enhancements (aria-live for toasts, focus management in popover).
 - Tag caching & incremental invalidation on mutations.
+
+Deferred intentionally due to 3–4 hour timebox: persistence layer, full test suite, opaque cursor encoding, advanced accessibility refinements.
 
 ---
 
