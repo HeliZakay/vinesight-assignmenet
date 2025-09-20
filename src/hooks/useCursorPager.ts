@@ -1,12 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
+type HasId = { id: string | number };
 export type PageResult<T> = { data: T[]; nextCursor: string | null };
 export type FetchPage<T> = (
   cursor: string | null,
   limit: number
 ) => Promise<PageResult<T>>;
 
-export function useCursorPager<T>(fetchPage: FetchPage<T>, pageSize = 20) {
+export function useCursorPager<T extends HasId>(
+  fetchPage: FetchPage<T>,
+  pageSize = 20
+) {
   const [items, setItems] = useState<T[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -22,7 +26,9 @@ export function useCursorPager<T>(fetchPage: FetchPage<T>, pageSize = 20) {
     []
   );
 
-  const fetchFirst = async () => {
+  const fetchFirst = useCallback(async () => {
+    if (loading || loadingMore) return;
+
     setLoading(true);
     setLoadingMore(false);
     setError(null);
@@ -43,9 +49,9 @@ export function useCursorPager<T>(fetchPage: FetchPage<T>, pageSize = 20) {
     } finally {
       if (activeRef.current && seq === reqSeqRef.current) setLoading(false);
     }
-  };
+  }, [fetchPage, pageSize]);
 
-  const fetchNext = async () => {
+  const fetchNext = useCallback(async () => {
     if (loading || loadingMore || !nextCursor) return;
     setLoadingMore(true);
     setError(null);
@@ -55,12 +61,8 @@ export function useCursorPager<T>(fetchPage: FetchPage<T>, pageSize = 20) {
       const { data, nextCursor: nc } = await fetchPage(nextCursor, pageSize);
       if (!activeRef.current || seq !== reqSeqRef.current) return;
       setItems((prev) => {
-        const seen = new Set(
-          (prev as any[]).map((x) => (x as any).id ?? JSON.stringify(x))
-        );
-        const additions = (data ?? []).filter(
-          (x: any) => !seen.has(x.id ?? JSON.stringify(x))
-        );
+        const seen = new Set(prev.map((x) => String(x.id)));
+        const additions = (data ?? []).filter((x) => !seen.has(String(x.id)));
         return prev.concat(additions);
       });
       setNextCursor(nc ?? null);
@@ -70,12 +72,11 @@ export function useCursorPager<T>(fetchPage: FetchPage<T>, pageSize = 20) {
     } finally {
       if (activeRef.current && seq === reqSeqRef.current) setLoadingMore(false);
     }
-  };
+  }, [loading, loadingMore, nextCursor, fetchPage, pageSize]);
 
   useEffect(() => {
     fetchFirst();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchPage, pageSize]); // parent should memoize fetchPage
+  }, [fetchFirst]);
 
   return {
     items,
