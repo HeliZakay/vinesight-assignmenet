@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 export function useTags() {
   // State to hold the list of tags
   const [tags, setTags] = useState<string[]>([]);
-  // State to track loading status
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // "active" flag prevents setting state if the component unmounts
@@ -18,12 +18,23 @@ export function useTags() {
 
     // Fetch tags from the API endpoint
     fetch("/api/tags")
-      .then((r) => r.json()) // Parse JSON response
+      .then(async (r) => {
+        if (!r.ok) {
+          throw new Error(`Failed to load tags: ${r.status}`);
+        }
+        return r.json();
+      })
       .then((data: string[]) => {
-        if (active) setTags(data); // Update state only if still mounted
+        if (active) {
+          setTags(Array.isArray(data) ? data : []);
+          setError(null);
+        }
+      })
+      .catch((e: any) => {
+        if (active) setError(e?.message || "Failed to load tags");
       })
       .finally(() => {
-        if (active) setLoading(false); // Stop loading when done
+        if (active) setLoading(false);
       });
 
     // Cleanup function sets active = false if component unmounts
@@ -33,5 +44,5 @@ export function useTags() {
   }, []); // Empty dependency array → runs only on mount
 
   // Expose tags and loading state
-  return { tags, loading } as const;
+  return { tags, loading, error } as const;
 }

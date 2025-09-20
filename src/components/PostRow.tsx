@@ -56,11 +56,12 @@ export function PostRow({ post }: { post: Post }) {
 
   const removeTag = async (tag: string) => {
     try {
-      const res = await fetch(`/api/posts/${row.id}/tags`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tag }),
-      });
+      const res = await fetch(
+        `/api/posts/${row.id}/tags/${encodeURIComponent(tag)}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (!res.ok) {
         showError("Couldn't remove tag. Please try again.");
         return;
