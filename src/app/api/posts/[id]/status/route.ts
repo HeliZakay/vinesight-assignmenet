@@ -2,12 +2,18 @@ import { NextResponse } from "next/server";
 import { getPosts } from "@/lib/posts";
 import { PostStatus } from "@/lib/statuses";
 
+/**
+ * PATCH /api/posts/[id]/status
+ * Updates the status of a post identified by ID.
+ */
 export async function PATCH(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  // Extract post ID from route params
   const { id } = await context.params;
-  // Ensure JSON content
+
+  // Ensure the request has JSON content
   const contentType = request.headers.get("content-type") || "";
   if (!contentType.toLowerCase().includes("application/json")) {
     return NextResponse.json(
@@ -16,7 +22,7 @@ export async function PATCH(
     );
   }
 
-  // Parse body safely
+  // Parse the request body safely
   let body: unknown;
   try {
     body = await request.json();
@@ -27,6 +33,7 @@ export async function PATCH(
     );
   }
 
+  // Extract `status` field from body
   const status = (body as any)?.status;
   if (typeof status !== "string") {
     return NextResponse.json(
@@ -48,13 +55,17 @@ export async function PATCH(
       { status: 400 }
     );
   }
+
+  // Find the post by ID
   const posts = getPosts();
   const post = posts.find((p) => p.id === id);
 
+  // Return 404 if post not found
   if (!post) {
     return NextResponse.json({ error: "Post not found" }, { status: 404 });
   }
 
+  // Update status and return updated post
   post.status = normalized as PostStatus;
   return NextResponse.json(post);
 }

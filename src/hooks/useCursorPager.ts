@@ -23,6 +23,9 @@ export function useCursorPager<T extends HasId>(
   const [loading, setLoading] = useState(false); // first page load
   const [loadingMore, setLoadingMore] = useState(false); // subsequent loads
   const [error, setError] = useState<string | null>(null);
+  // Track whether the first page has finished (success or error) so consumers
+  // can suppress premature empty states while the initial load is in flight.
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   // Request sequence number (helps discard stale responses)
   const reqSeqRef = useRef(0);
@@ -39,6 +42,8 @@ export function useCursorPager<T extends HasId>(
 
   // Fetch the first page (reset everything and start fresh)
   const fetchFirst = useCallback(async () => {
+    // Reset first-load completion flag so UI knows a new initial load started
+    setHasLoaded(false);
     setLoading(true);
     setLoadingMore(false);
     setError(null);
@@ -61,8 +66,10 @@ export function useCursorPager<T extends HasId>(
       setItems([]);
       setNextCursor(null);
     } finally {
-      // Turn off loading if still relevant
-      if (activeRef.current && seq === reqSeqRef.current) setLoading(false);
+      if (activeRef.current && seq === reqSeqRef.current) {
+        setLoading(false); // Turn off loading if still relevant
+        setHasLoaded(true); // Mark that the first attempt has completed (success or error) if still active
+      }
     }
   }, [fetchPage, pageSize]);
 
@@ -108,5 +115,6 @@ export function useCursorPager<T extends HasId>(
     error, // error message if last fetch failed
     refresh: fetchFirst, // restart pagination from scratch
     loadMore: fetchNext, // load the next page
+    hasLoaded, // whether the first page load cycle has completed
   } as const;
 }

@@ -1,6 +1,6 @@
 import raw from "../../data/mock-posts.json";
 
-// external dataset item shape
+// Shape of each item as it appears in the external dataset (raw JSON)
 type RawPost = {
   id: number;
   platform: string;
@@ -10,6 +10,7 @@ type RawPost = {
   created_at: string;
 };
 
+// Type aliases for post status and supported platforms
 export type PostStatus = string;
 export type Platform =
   | "twitter"
@@ -19,15 +20,20 @@ export type Platform =
   | "reddit"
   | "other";
 
+// Normalized Post type used inside the app
 export type Post = {
-  id: string;
-  platform: Platform;
+  id: string; // normalized to string
+  platform: Platform; // validated platform value
   text: string;
-  status: PostStatus;
+  status: PostStatus; // validated status value
   tags: string[];
-  createdAt: string;
+  createdAt: string; // renamed from created_at
 };
 
+/**
+ * Normalize arbitrary string to a supported platform value.
+ * If unknown, defaults to "other".
+ */
 function normalizePlatform(p: string): Platform {
   const v = p?.toLowerCase();
   if (
@@ -39,6 +45,10 @@ function normalizePlatform(p: string): Platform {
   return "other";
 }
 
+/**
+ * Normalize arbitrary string to a supported post status.
+ * Defaults to "flagged" if not recognized.
+ */
 function normalizeStatus(s: string): PostStatus {
   const v = s?.toLowerCase();
   if (v === "flagged" || v === "under_review" || v === "dismissed")
@@ -46,6 +56,7 @@ function normalizeStatus(s: string): PostStatus {
   return "flagged";
 }
 
+// Transform raw dataset into normalized Post[] for app usage
 const posts: Post[] = (raw as RawPost[]).map((r) => ({
   id: String(r.id),
   platform: normalizePlatform(r.platform),
@@ -55,6 +66,9 @@ const posts: Post[] = (raw as RawPost[]).map((r) => ({
   createdAt: r.created_at,
 }));
 
+/**
+ * Get normalized posts dataset.
+ */
 export function getPosts(): Post[] {
   return posts;
 }

@@ -1,4 +1,3 @@
-// File: lib/platforms.ts
 export enum Platform {
   Twitter = "twitter",
   Facebook = "facebook",
