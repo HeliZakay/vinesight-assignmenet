@@ -43,9 +43,9 @@ export async function PATCH(
   }
 
   // Normalize and validate status value
-  const normalized = status.toLowerCase();
+  const normalizedStatus = status.toLowerCase();
   const allowed = new Set<string>(Object.values(PostStatus));
-  if (!allowed.has(normalized)) {
+  if (!allowed.has(normalizedStatus)) {
     return NextResponse.json(
       {
         error: `Invalid status '${status}'. Allowed: ${[...allowed].join(
@@ -66,6 +66,6 @@ export async function PATCH(
   }
 
   // Update status and return updated post
-  post.status = normalized as PostStatus;
+  post.status = normalizedStatus as PostStatus;
   return NextResponse.json(post);
 }

@@ -34,17 +34,15 @@ export async function POST(
   }
 
   // Validate `tag` field
-  let tag = (body as { tag?: unknown })?.tag;
+  const tag = (body as { tag?: unknown })?.tag;
   if (typeof tag !== "string") {
     return NextResponse.json(
       { error: "Field 'tag' is required and must be a string" },
       { status: 400 }
     );
   }
-
-  // Normalize tag value (trim + lowercase)
-  tag = tag.trim().toLowerCase();
-  if (tag.length === 0 || tag.length > 30) {
+  const normalizedTag = tag.trim().toLowerCase();
+  if (normalizedTag.length === 0 || normalizedTag.length > 30) {
     return NextResponse.json(
       { error: "Tag must be 1-30 characters after trimming" },
       { status: 400 }
@@ -60,8 +58,8 @@ export async function POST(
   }
 
   // Add tag only if it doesn’t already exist
-  if (!post.tags.includes(tag)) {
-    post.tags.push(tag);
+  if (!post.tags.includes(normalizedTag)) {
+    post.tags.push(normalizedTag);
   }
 
   // Return updated post
