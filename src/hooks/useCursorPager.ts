@@ -1,23 +1,23 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 
-// Require each item to have a stable identifier (string or number)
+// Items must expose a stable 'id'
 type HasId = { id: string | number };
 
-// A page of results: data + pointer to the next page (or null if no more)
+// Page result shape
 export type PageResult<T> = { data: T[]; nextCursor: string | null };
 
-// Function type for fetching a page of data given a cursor + limit
+// Fetch function signature
 export type FetchPage<T> = (
   cursor: string | null,
   limit: number
 ) => Promise<PageResult<T>>;
 
-// Custom React hook for cursor-based pagination
+// Cursor-based pagination hook
 export function useCursorPager<T extends HasId>(
   fetchPage: FetchPage<T>, // async function to fetch a page of data
   pageSize = 20 // default number of items per page
 ) {
-  // State for the accumulated items, cursor, loading flags, and errors
+  // Core state
   const [items, setItems] = useState<T[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(false); // first page load
@@ -27,10 +27,10 @@ export function useCursorPager<T extends HasId>(
   // can suppress premature empty states while the initial load is in flight.
   const [hasLoaded, setHasLoaded] = useState(false);
 
-  // Request sequence number (helps discard stale responses)
+  // Sequence to discard stale responses
   const reqSeqRef = useRef(0);
 
-  // Tracks whether the component using this hook is still mounted
+  // Mounted flag
   const activeRef = useRef(true);
   useEffect(
     () => () => {
@@ -40,7 +40,7 @@ export function useCursorPager<T extends HasId>(
     []
   );
 
-  // Fetch the first page (reset everything and start fresh)
+  // First page fetch/reset
   const fetchFirst = useCallback(async () => {
     // Reset first-load completion flag so UI knows a new initial load started
     setHasLoaded(false);
@@ -73,7 +73,7 @@ export function useCursorPager<T extends HasId>(
     }
   }, [fetchPage, pageSize]);
 
-  // Fetch the next page (append results without duplicates)
+  // Fetch subsequent page
   const fetchNext = useCallback(async () => {
     // Guard: don’t fetch if already loading or no more pages
     if (loading || loadingMore || !nextCursor) return;
@@ -101,12 +101,12 @@ export function useCursorPager<T extends HasId>(
     }
   }, [loading, loadingMore, nextCursor, fetchPage, pageSize]);
 
-  // Automatically fetch the first page when the hook is initialized
+  // Kick off initial load
   useEffect(() => {
     fetchFirst();
   }, [fetchFirst]);
 
-  // Expose state and actions to the component using this hook
+  // Public API
   return {
     items, // accumulated list of items
     loading, // true while first page is loading

@@ -1,5 +1,4 @@
-// Displays a single post row with inline editing for status and tags.
-// Handles optimistic UI updates after server success and shows toast feedback.
+// Single post row: inline status + tag edits with optimistic updates + toast feedback.
 import {
   HStack,
   Input,

@@ -1,17 +1,10 @@
 import { NextResponse } from "next/server";
 import { getPosts } from "@/lib/posts";
-import { PostStatus } from "@/lib/statuses"; // (kept if future validation needed)
 
 /**
  * DELETE /api/posts/:id/tags/:tag
- * Removes a tag from the specified post.
- * Path params:
- *  - id: post identifier
- *  - tag: tag (case-insensitive) to remove
- *
- * Response:
- * 204 No Content on success (tag removed or tag absent) OR
- * 404 if post not found
+ * Removes a tag from the specified post (case-insensitive match).
+ * 204 No Content whether or not the tag existed (idempotent) and 404 if post not found.
  */
 export async function DELETE(
   _request: Request,
