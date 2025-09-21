@@ -34,7 +34,7 @@ export async function PATCH(
   }
 
   // Extract `status` field from body
-  const status = (body as any)?.status;
+  const status = (body as { status?: unknown })?.status;
   if (typeof status !== "string") {
     return NextResponse.json(
       { error: "Field 'status' is required and must be a string" },

@@ -30,8 +30,9 @@ export function useTags() {
           setError(null);
         }
       })
-      .catch((e: any) => {
-        if (active) setError(e?.message || "Failed to load tags");
+      .catch((e: unknown) => {
+        const err = e as { message?: string } | undefined;
+        if (active) setError(err?.message || "Failed to load tags");
       })
       .finally(() => {
         if (active) setLoading(false);

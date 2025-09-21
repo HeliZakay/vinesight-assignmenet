@@ -2,15 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Box,
-  Container,
-  Flex,
-  Heading,
-  Text,
-  Input,
-  Button,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Text, Input } from "@chakra-ui/react";
 import { FiltersBar } from "@/components/FiltersBar";
 import { TagsFilterPopover } from "@/components/TagsFilterPopover";
 import { PostsTable } from "@/components/PostsTable";

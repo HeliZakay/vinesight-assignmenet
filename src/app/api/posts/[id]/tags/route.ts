@@ -34,7 +34,7 @@ export async function POST(
   }
 
   // Validate `tag` field
-  let tag = (body as any)?.tag;
+  let tag = (body as { tag?: unknown })?.tag;
   if (typeof tag !== "string") {
     return NextResponse.json(
       { error: "Field 'tag' is required and must be a string" },
@@ -67,4 +67,3 @@ export async function POST(
   // Return updated post
   return NextResponse.json(post);
 }
-

@@ -16,7 +16,7 @@ export function usePosts(
   // Build a memoized function that fetches a single page of posts
   // The function is re-created only if filters or page size change
   const fetchPage = useMemo(() => {
-    return async (cursor: string | null, limit: number) => {
+    return async (cursor: string | null) => {
       const params = new URLSearchParams();
 
       // Add platform filter if not "all"
@@ -56,9 +56,8 @@ export function usePosts(
         await res.json();
       return json;
     };
-    // Dependencies: changing any filter or pageSize regenerates the fetcher,
-    // which resets the pager
-  }, [platform, status, JSON.stringify(tags), search, pageSize]);
+    // Dependencies: changing any filter or pageSize regenerates the fetcher
+  }, [platform, status, tags, search, pageSize]);
 
   // Initialize cursor pager hook with the fetch function and page size
   const pager = useCursorPager<Post>(fetchPage, pageSize);

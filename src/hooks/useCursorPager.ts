@@ -59,10 +59,11 @@ export function useCursorPager<T extends HasId>(
       // Save results
       setItems(data ?? []);
       setNextCursor(nextCursor ?? null);
-    } catch (e: any) {
+    } catch (e: unknown) {
+      const err = e as { message?: string } | undefined;
       // Same guards: only handle error if still active + latest request
       if (!activeRef.current || seq !== reqSeqRef.current) return;
-      setError(e?.message || "Failed to fetch data");
+      setError(err?.message || "Failed to fetch data");
       setItems([]);
       setNextCursor(null);
     } finally {
@@ -93,9 +94,10 @@ export function useCursorPager<T extends HasId>(
         return prev.concat(additions);
       });
       setNextCursor(nc ?? null);
-    } catch (e: any) {
+    } catch (e: unknown) {
       if (!activeRef.current || seq !== reqSeqRef.current) return;
-      setError(e?.message || "Failed to fetch more data");
+      const err = e as { message?: string } | undefined;
+      setError(err?.message || "Failed to fetch more data");
     } finally {
       if (activeRef.current && seq === reqSeqRef.current) setLoadingMore(false);
     }
