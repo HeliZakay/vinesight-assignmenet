@@ -27,7 +27,6 @@ export default function Home() {
     hasMore, // whether "Load more" should be enabled
     error,
     loadMore, // fetch next page
-    hasLoaded, // first load finished (success or error)
   } = usePosts(platform, status, selectedTags, search, POSTS_PER_PAGE);
 
   return (
@@ -83,8 +82,7 @@ export default function Home() {
             />
           )}
 
-          {/* Loading / empty / table */}
-          {!hasLoaded || loading ? (
+          {loading ? (
             <Box textAlign="center" p={10}>
               <Text color="gray.600">Loading posts…</Text>
             </Box>

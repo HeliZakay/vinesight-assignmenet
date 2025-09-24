@@ -71,6 +71,5 @@ export function usePosts(
     error: pager.error, // Error message if request failed
     loadMore: pager.loadMore, // Function to fetch next page
     refresh: pager.refresh, // Function to reload data from start
-    hasLoaded: pager.hasLoaded, // First load finished (success or error)
   } as const;
 }

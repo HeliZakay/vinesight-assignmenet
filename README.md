@@ -7,8 +7,8 @@ Simple full‑stack tool for analysts to review, filter, and annotate flagged so
 ## Highlights
 
 - Full assignment coverage: list + filter (status / platform / tags / search) + status updates + tag add/remove
-- Deterministic server filtering + cursor pagination (createdAt desc, id asc) with race-safe hook & flicker-free first load
-- Fast, optimistic in-row status & tag edits with immediate toast feedback (success & error) and a duplicate-tag guard.
+- Deterministic server filtering + cursor pagination (createdAt desc, id asc) with race-safe hook.
+- Fast in-row status & tag edits with immediate toast feedback (success & error) and a duplicate-tag guard.
 - Robust validation & error handling: strict server guards (content-type, JSON parsing, status/tag constraints, pagination bounds), idempotent tag delete (always 204), client pre-validation (empty / duplicate / length), guarded fetch responses with surfaced tag-load errors, and accessible aria-live toasts (no silent failures).
 
 ---
@@ -92,7 +92,7 @@ State & Filters:
 
 Pagination UX:
 
-- Cursor-based incremental loading via a single Load More button. Previously loaded pages persist while the next page loads (no jarring resets). A `hasLoaded` flag suppresses premature empty UI.
+- Cursor-based incremental loading via a single Load More button. Previously loaded pages persist while the next page loads (no jarring resets).
 
 Mutations:
 
