@@ -96,7 +96,7 @@ Pagination UX:
 
 Mutations:
 
-- Row-level status dropdown and tag add/remove actions update optimistically on success; accessible toasts surface success/errors; duplicate tag submissions short‑circuit locally.
+- Row-level status dropdown and tag add/remove actions update on success; accessible toasts surface success/errors; duplicate tag submissions short‑circuit locally.
 
 Resilience & A11y:
 
