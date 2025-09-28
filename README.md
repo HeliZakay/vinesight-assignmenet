@@ -110,7 +110,7 @@ Resilience & A11y:
 - Cursor uses last item id (sufficient for static dataset); if dataset mutability or non-monotonic ordering were introduced, an opaque composite cursor (timestamp+id) would be preferred.
 - Search limited to post text; does not search tags/platform (simpler + matches minimal requirement).
 - Tag filter logic is OR (if any tag matches, post included). Could be extended to AND with UI toggle.
-- Optimistic-ish row updates: row state updated after 200 response; list not globally refetched (avoids redundant calls on every mutation).
+- Posts are not refetched from backend on every mutation, only on filters changes. (avoids redundant calls). Trade-off: if a change makes the row not match current filters (e.g., flagged → dismissed), it won’t disappear until a later refresh.
 
 ---
 
