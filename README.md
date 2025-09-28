@@ -15,7 +15,7 @@ Simple full‑stack tool for analysts to review, filter, and annotate flagged so
 
 ## Tech Stack
 
-Frontend: React (Next.js App Router), TypeScript, Chakra UI (component primitives)
+Frontend: React (Next.js App Router), TypeScript, Chakra UI
 Backend: Next.js API routes (Node.js / TypeScript)
 Data Source: `data/mock-posts.json` (in‑memory only)
 
@@ -88,7 +88,7 @@ Returns sorted unique list of all tags (lowercase).
 
 State & Filters:
 
-- Central `FiltersContext` holds status, platform, search text, and selected tags (OR logic). Any change triggers a fresh first-page fetch.
+- Central `FiltersContext` holds status, platform, search text, and selected tags. Any change triggers a fresh first-page fetch.
 
 Pagination UX:
 
@@ -96,7 +96,7 @@ Pagination UX:
 
 Mutations:
 
-- Row-level status dropdown and tag add/remove actions update on success; accessible toasts surface success/errors; duplicate tag submissions short‑circuit locally.
+- Row-level status dropdown and tag add/remove actions update on success; accessible toasts surface success/errors.
 
 Resilience & A11y:
 
@@ -116,7 +116,7 @@ Resilience & A11y:
 
 ## Error Handling
 
-- Fetch posts: fails with toast (generic user-friendly message; technical reason kept internal).
+- Fetch posts: fails with toast.
 - Mutations: toast on failure; network errors caught.
 - Tag fetching: loading / error / empty states surfaced in tag popover.
 
@@ -126,10 +126,10 @@ Resilience & A11y:
 
 - Persist changes (database layer + repository abstraction).
 - Opaque cursor encoding (base64 of createdAt|id) for mutation-safe pagination.
-- AbortController in pagination & tags fetching.
+- AbortController in pagination fetching.
 - Unit tests: filter logic, pagination edges, status/tag mutation handlers.
-- Input sanitation / stricter schema validation (zod or valibot).
-- Accessibility enhancements (aria-live for toasts, focus management in popover).
+- Input sanitation / stricter schema validation (zod).
+- Accessibility enhancements.
 - Introduce a shared TagsContext for the tag catalog; update it on add/remove so the UI reflects changes immediately.
 
 ---
