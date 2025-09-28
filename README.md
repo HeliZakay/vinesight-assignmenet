@@ -130,7 +130,7 @@ Resilience & A11y:
 - Unit tests: filter logic, pagination edges, status/tag mutation handlers.
 - Input sanitation / stricter schema validation (zod or valibot).
 - Accessibility enhancements (aria-live for toasts, focus management in popover).
-- Tag caching & incremental invalidation on mutations.
+- Introduce a shared TagsContext for the tag catalog; update it on add/remove so the UI reflects changes immediately.
 
 ---
 
