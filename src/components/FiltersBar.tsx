@@ -15,12 +15,18 @@ export function FiltersBar() {
   if (!filters) return null;
   const { status, setStatus, platform, setPlatform } = filters;
   return (
-    <HStack gap={4} mb={4} alignItems="flex-end" justify="center">
-      <Box>
+    <HStack
+      gap={4}
+      mb={4}
+      alignItems="flex-end"
+      justify="center"
+      flexWrap="wrap"
+    >
+      <Box width={{ base: "100%", sm: "auto" }}>
         <Text mb={1} fontSize="sm" color="gray.600">
           Status
         </Text>
-        <NativeSelect.Root size="sm" width="220px">
+        <NativeSelect.Root size="sm" width={{ base: "100%", sm: "220px" }}>
           <NativeSelect.Field
             pl={3}
             style={{ textIndent: "4px", cursor: "pointer" }}
@@ -37,11 +43,11 @@ export function FiltersBar() {
         </NativeSelect.Root>
       </Box>
 
-      <Box>
+      <Box width={{ base: "100%", sm: "auto" }}>
         <Text mb={1} fontSize="sm" color="gray.600">
           Platform
         </Text>
-        <NativeSelect.Root size="sm" width="220px">
+        <NativeSelect.Root size="sm" width={{ base: "100%", sm: "220px" }}>
           <NativeSelect.Field
             pl={3}
             style={{ textIndent: "4px", cursor: "pointer" }}

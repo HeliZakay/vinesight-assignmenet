@@ -6,6 +6,7 @@ import { Box, Container, Flex, Heading, Text, Input } from "@chakra-ui/react";
 import { FiltersBar } from "@/components/FiltersBar";
 import { TagsFilterPopover } from "@/components/TagsFilterPopover";
 import { PostsTable } from "@/components/PostsTable";
+import { PostsCards } from "@/components/PostsCards";
 import { LoadMoreButton } from "@/components/LoadMoreButton";
 import { usePosts } from "@/hooks/usePosts";
 import { FiltersContext } from "@/context/FiltersContext";
@@ -44,7 +45,7 @@ export default function Home() {
     >
       <Flex justify="center" bg="gray.50" minH="100vh" align="flex-start">
         <Container
-          maxW="container.lg"
+          maxW={{ base: "full", md: "container.md", lg: "container.lg" }}
           px={{ base: 4, md: 6 }}
           py={{ base: 6, md: 8 }}
           bgGradient="linear(to-r, blue.50, purple.50)"
@@ -63,7 +64,7 @@ export default function Home() {
               placeholder="Search posts…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              maxW="400px"
+              width={{ base: "100%", sm: "400px" }}
               p={3}
             />
           </Box>
@@ -100,7 +101,14 @@ export default function Home() {
             </Box>
           ) : (
             <>
-              <PostsTable posts={posts} />
+              {/* Mobile: cards; Desktop: table */}
+              <Box display={{ base: "block", md: "none" }}>
+                <PostsCards posts={posts} />
+              </Box>
+
+              <Box display={{ base: "none", md: "block" }}>
+                <PostsTable posts={posts} />
+              </Box>
 
               {/* Load More control for cursor pagination */}
               <LoadMoreButton

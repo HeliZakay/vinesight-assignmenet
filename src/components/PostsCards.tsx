@@ -1,25 +1,24 @@
-// Single post row: inline status + tag edits with optimistic updates + toast feedback.
+// Mobile-friendly card list for posts (renders on small screens).
 import {
+  Box,
   HStack,
+  VStack,
+  Text,
   Input,
+  Button,
   NativeSelect,
   Tag as CTag,
-  chakra,
-  Button,
 } from "@chakra-ui/react";
-import type { Post } from "@/lib/posts";
 import { useState } from "react";
+import type { Post } from "@/lib/posts";
 import { PostStatus } from "@/lib/statuses";
-import { PortalToast } from "./PortalToast";
+import { PortalToast } from "@/components/PortalToast";
 
 const STATUS_OPTIONS = ["all", ...Object.values(PostStatus)];
 
-export function PostRow({ post }: { post: Post }) {
-  // Local copy of the post enabling optimistic updates without refetching list
+function PostCard({ post }: { post: Post }) {
   const [row, setRow] = useState<Post>(post);
-  // Draft tag input value
   const [draft, setDraft] = useState("");
-  // Transient toast message state (portal renders when non-null)
   const [toastMsg, setToastMsg] = useState<{
     title: string;
     description?: string;
@@ -34,14 +33,12 @@ export function PostRow({ post }: { post: Post }) {
     setToastMsg({ title, description, status: "success" });
   };
 
-  // Pre-compute validation for enabling the Add button (purely derived)
   const normalizedDraft = draft.trim().toLowerCase();
   const canAdd =
     normalizedDraft.length > 0 &&
     normalizedDraft.length <= 30 &&
     !row.tags.some((t) => t.toLowerCase() === normalizedDraft);
 
-  // Update status via PATCH then optimistically update local state on success
   const updateStatus = async (newStatus: string) => {
     try {
       const res = await fetch(`/api/posts/${row.id}/status`, {
@@ -60,7 +57,6 @@ export function PostRow({ post }: { post: Post }) {
     }
   };
 
-  // Remove a tag (spec-compliant DELETE path with tag in URL)
   const removeTag = async (tag: string) => {
     try {
       const res = await fetch(
@@ -80,12 +76,10 @@ export function PostRow({ post }: { post: Post }) {
     }
   };
 
-  // Add new tag after client-side validation, then clear draft on success
   const addTag = async () => {
     const raw = draft.trim();
     const tag = raw.toLowerCase();
 
-    // Friendly validation instead of silent return
     if (raw.length === 0) {
       showError("Please enter a tag before adding.");
       return;
@@ -118,7 +112,7 @@ export function PostRow({ post }: { post: Post }) {
   };
 
   return (
-    <>
+    <Box bg="white" borderWidth="1px" borderRadius="md" p={4} boxShadow="sm">
       {toastMsg && (
         <PortalToast
           title={toastMsg.title}
@@ -128,17 +122,31 @@ export function PostRow({ post }: { post: Post }) {
           onClose={() => setToastMsg(null)}
         />
       )}
-      <chakra.tr _hover={{ bg: "gray.50" }}>
-        <chakra.td p={3} display={{ base: "none", md: "table-cell" }}>
-          {row.id}
-        </chakra.td>
-        <chakra.td p={3}>{row.platform}</chakra.td>
-        <chakra.td p={3} wordBreak="break-word" whiteSpace="normal">
-          {row.text}
-        </chakra.td>
 
-        <chakra.td p={3}>
-          <NativeSelect.Root size="sm" width={{ base: "100%", sm: "200px" }}>
+      <VStack align="stretch" gap={3}>
+        <HStack justify="space-between" align="start" gap={3}>
+          <Text fontWeight="bold" color="purple.700">
+            {row.platform}
+          </Text>
+          <Text fontSize="sm" color="gray.500">
+            #{row.id}
+          </Text>
+        </HStack>
+        <Text fontSize="sm" color="gray.600">
+          {new Date(row.createdAt).toLocaleString()}
+        </Text>
+
+        <Box height="1px" bg="gray.200" />
+
+        <Box wordBreak="break-word" whiteSpace="normal">
+          <Text>{row.text}</Text>
+        </Box>
+
+        <VStack align="stretch" gap={2}>
+          <Text fontSize="sm" color="gray.600">
+            Status
+          </Text>
+          <NativeSelect.Root size="sm" width="100%">
             <NativeSelect.Field
               pl={3}
               style={{ textIndent: "4px", cursor: "pointer" }}
@@ -153,10 +161,13 @@ export function PostRow({ post }: { post: Post }) {
             </NativeSelect.Field>
             <NativeSelect.Indicator />
           </NativeSelect.Root>
-        </chakra.td>
+        </VStack>
 
-        <chakra.td p={3}>
-          <HStack gap={2} flexWrap="wrap" mb={2}>
+        <VStack align="stretch" gap={2}>
+          <Text fontSize="sm" color="gray.600">
+            Tags
+          </Text>
+          <HStack gap={2} flexWrap="wrap">
             {row.tags.map((tag) => (
               <CTag.Root
                 key={tag}
@@ -182,7 +193,7 @@ export function PostRow({ post }: { post: Post }) {
           <HStack gap={2} flexWrap="wrap">
             <Input
               size="sm"
-              width={{ base: "100%", sm: "220px" }}
+              width={{ base: "100%", sm: "auto" }}
               placeholder="Add tag"
               px={3}
               value={draft}
@@ -203,12 +214,18 @@ export function PostRow({ post }: { post: Post }) {
               Add
             </Button>
           </HStack>
-        </chakra.td>
+        </VStack>
+      </VStack>
+    </Box>
+  );
+}
 
-        <chakra.td p={3} display={{ base: "none", md: "table-cell" }}>
-          {new Date(row.createdAt).toLocaleString()}
-        </chakra.td>
-      </chakra.tr>
-    </>
+export function PostsCards({ posts }: { posts: Post[] }) {
+  return (
+    <VStack align="stretch" gap={4}>
+      {posts.map((p) => (
+        <PostCard key={p.id} post={p} />
+      ))}
+    </VStack>
   );
 }
