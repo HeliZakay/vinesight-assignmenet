@@ -1,6 +1,6 @@
 // Renders platform & status dropdown filters backed by FiltersContext.
 // Keeps filter UI logic isolated from the page and memo-friendly.
-import { Box, HStack, NativeSelect, Text } from "@chakra-ui/react";
+import { Box, HStack, NativeSelect, Text, chakra } from "@chakra-ui/react";
 import { Platform } from "@/lib/platforms";
 import { PostStatus } from "@/lib/statuses";
 import { useContext } from "react";
@@ -23,11 +23,15 @@ export function FiltersBar() {
       flexWrap="wrap"
     >
       <Box width={{ base: "100%", sm: "auto" }}>
-        <Text mb={1} fontSize="sm" color="gray.600">
-          Status
-        </Text>
+        <chakra.label htmlFor="status-filter">
+          <Text mb={1} fontSize="sm" color="gray.600" display="block">
+            Status
+          </Text>
+        </chakra.label>
         <NativeSelect.Root size="sm" width={{ base: "100%", sm: "220px" }}>
           <NativeSelect.Field
+            id="status-filter"
+            aria-label="Status filter"
             pl={3}
             style={{ textIndent: "4px", cursor: "pointer" }}
             value={status}
@@ -44,11 +48,15 @@ export function FiltersBar() {
       </Box>
 
       <Box width={{ base: "100%", sm: "auto" }}>
-        <Text mb={1} fontSize="sm" color="gray.600">
-          Platform
-        </Text>
+        <chakra.label htmlFor="platform-filter">
+          <Text mb={1} fontSize="sm" color="gray.600" display="block">
+            Platform
+          </Text>
+        </chakra.label>
         <NativeSelect.Root size="sm" width={{ base: "100%", sm: "220px" }}>
           <NativeSelect.Field
+            id="platform-filter"
+            aria-label="Platform filter"
             pl={3}
             style={{ textIndent: "4px", cursor: "pointer" }}
             value={platform}

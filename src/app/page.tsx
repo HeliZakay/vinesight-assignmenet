@@ -66,6 +66,7 @@ export default function Home() {
               onChange={(e) => setSearch(e.target.value)}
               width={{ base: "100%", sm: "400px" }}
               p={3}
+              aria-label="Search posts"
             />
           </Box>
 

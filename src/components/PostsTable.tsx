@@ -13,7 +13,15 @@ export function PostsTable({ posts }: { posts: Post[] }) {
       boxShadow="sm"
       bg="white"
     >
-      <chakra.table w="full" borderCollapse="separate" borderSpacing="0">
+      <chakra.table
+        w="full"
+        borderCollapse="separate"
+        borderSpacing="0"
+        aria-label="Flagged posts"
+      >
+        <chakra.caption srOnly>
+          Flagged posts with platform, text, status, tags, and created time
+        </chakra.caption>
         <chakra.thead bg="purple.50">
           <chakra.tr>
             <chakra.th
