@@ -140,6 +140,7 @@ export function PostRow({ post }: { post: Post }) {
         <chakra.td p={3}>
           <NativeSelect.Root size="sm" width={{ base: "100%", sm: "200px" }}>
             <NativeSelect.Field
+              aria-label={`Status for post ${row.id}`}
               pl={3}
               style={{ textIndent: "4px", cursor: "pointer" }}
               value={row.status}

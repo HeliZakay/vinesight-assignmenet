@@ -1,12 +1,24 @@
 // File: app/page.tsx
 "use client";
 
-import { useState } from "react";
-import { Box, Container, Flex, Heading, Text, Input } from "@chakra-ui/react";
+import { Suspense, lazy, useState } from "react";
+import {
+  Box,
+  Container,
+  Flex,
+  Heading,
+  Text,
+  Input,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { FiltersBar } from "@/components/FiltersBar";
 import { TagsFilterPopover } from "@/components/TagsFilterPopover";
-import { PostsTable } from "@/components/PostsTable";
-import { PostsCards } from "@/components/PostsCards";
+const PostsTable = lazy(() =>
+  import("@/components/PostsTable").then((m) => ({ default: m.PostsTable }))
+);
+const PostsCards = lazy(() =>
+  import("@/components/PostsCards").then((m) => ({ default: m.PostsCards }))
+);
 import { LoadMoreButton } from "@/components/LoadMoreButton";
 import { usePosts } from "@/hooks/usePosts";
 import { FiltersContext } from "@/context/FiltersContext";
@@ -19,6 +31,7 @@ export default function Home() {
   const [platform, setPlatform] = useState<string>("all");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [search, setSearch] = useState("");
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   // Cursor-paginated data + controls
   const {
@@ -103,20 +116,28 @@ export default function Home() {
           ) : (
             <>
               {/* Mobile: cards; Desktop: table */}
-              <Box display={{ base: "block", md: "none" }}>
-                <PostsCards posts={posts} />
-              </Box>
+              {isMobile === undefined ? null : (
+                <Suspense
+                  fallback={
+                    <Box textAlign="center" p={10}>
+                      <Text color="gray.600">Loading posts…</Text>
+                    </Box>
+                  }
+                >
+                  {isMobile ? (
+                    <PostsCards posts={posts} />
+                  ) : (
+                    <PostsTable posts={posts} />
+                  )}
 
-              <Box display={{ base: "none", md: "block" }}>
-                <PostsTable posts={posts} />
-              </Box>
-
-              {/* Load More control for cursor pagination */}
-              <LoadMoreButton
-                hasMore={hasMore}
-                loadingMore={loadingMore}
-                onClick={loadMore}
-              />
+                  {/* Load More control for cursor pagination */}
+                  <LoadMoreButton
+                    hasMore={hasMore}
+                    loadingMore={loadingMore}
+                    onClick={loadMore}
+                  />
+                </Suspense>
+              )}
             </>
           )}
         </Container>
